@@ -3,18 +3,18 @@
 “Born2BeRoot is a system administration project where I created a Debian server inside a virtual machine. I configured users, groups, and sudo to manage administrator privileges securely. I secured the system by configuring SSH on a custom port, disabling root login, and enabling a firewall with UFW. I applied password policies using PAM to enforce strong passwords. I created a monitoring script that displays system information and scheduled it with cron. Finally, I generated a signature file to prove the integrity of my virtual machine.”
 
 ⚡ Panic-Proof Recall Sheet
-1️⃣ Born2BeRoot 		→ Sysadmin, VM, secure
-2️⃣ VM 				→ Computer-in-computer, isolated
-3️⃣ OS & why 			→ Debian, stable, beginner-friendly
-4️⃣ Root 				→ Superuser, full power, careful
-5️⃣ Sudo 				→ Temporary root, safe, logged
-6️⃣ sudoers.d 			→ Separate files, safe, organized
-7️⃣ SSH config 			→ Remote access, disable root, custom port
-8️⃣ Firewall & UFW 		→ Network protection, simple
-9️⃣ Password & PAM 	→ Strong passwords, enforce, secure (Pluggable Authentication Modules)
-🔟 Monitoring script 	→ CPU/RAM/disk/uptime, automated
-1️⃣1️⃣ Cron			→ Schedule tasks, auto-run script, automation
-1️⃣2️⃣ Signature file 	→ SHA-1 hash, verify integrity [MUST DUPLICATE MY B2BR if not signature will change upon launching]
+1️⃣ Born2BeRoot 	              	→ Sysadmin, VM, secure
+2️⃣ VM 				                  → Computer-in-computer, isolated
+3️⃣ OS & why 	        		      → Debian, stable, beginner-friendly
+4️⃣ Root 			          	      → Superuser, full power, careful
+5️⃣ Sudo 			          	      → Temporary root, safe, logged
+6️⃣ sudoers.d 		        	      → Separate files, safe, organized
+7️⃣ SSH config 			            → Remote access, disable root, custom port
+8️⃣ Firewall & UFW 	            → Network protection, simple
+9️⃣ Password & PAM 	            → Strong passwords, enforce, secure (Pluggable Authentication Modules)
+🔟 Monitoring script 	          → CPU/RAM/disk/uptime, automated
+1️⃣1️⃣ Cron		            	      → Schedule tasks, auto-run script, automation
+1️⃣2️⃣ Signature file     	      → SHA-1 hash, verify integrity [MUST DUPLICATE MY B2BR if not signature will change upon launching]
 → Golden sentence if stuck: “This was done for security and best practices.”
 
 ⚡ Script
@@ -124,17 +124,17 @@ cmnd=$(journalctl _COMM=sudo | grep COMMAND | wc -l)
 → counts executed sudo commands
 
 ⚡ Script Outputs
-Architecture 				→ Type of OS and CPU + kernel
+Architecture 				        → Type of OS and CPU + kernel
 CPU (physical & virtual) 		→ How many cores the server has
-RAM usage 				→ Memory used / total
-Disk usage 				→ Storage used / total
-CPU load 				→ How busy the server is
-Last reboot 				→ When the server was restarted
-LVM 					→ Confirms disk security setup (yes/no)
-TCP connections 			→ Active network connections
-Users 					→ How many users are logged in
-IP & MAC 				→ Server network identity
-Sudo commands 			→ How many admin commands were run
+RAM usage 				          → Memory used / total
+Disk usage 				          → Storage used / total
+CPU load 				            → How busy the server is
+Last reboot 				        → When the server was restarted
+LVM 					              → Confirms disk security setup (yes/no)
+TCP connections 			      → Active network connections
+Users 					            → How many users are logged in
+IP & MAC 				            → Server network identity
+Sudo commands 			        → How many admin commands were run
 
 [GitBook Tests]
 0️⃣0️⃣ apt vs aptitude
