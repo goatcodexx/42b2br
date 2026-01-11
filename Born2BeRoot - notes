@@ -1,0 +1,178 @@
+[BORN2BEROOT - Notes]
+
+“Born2BeRoot is a system administration project where I created a Debian server inside a virtual machine. I configured users, groups, and sudo to manage administrator privileges securely. I secured the system by configuring SSH on a custom port, disabling root login, and enabling a firewall with UFW. I applied password policies using PAM to enforce strong passwords. I created a monitoring script that displays system information and scheduled it with cron. Finally, I generated a signature file to prove the integrity of my virtual machine.”
+
+⚡ Panic-Proof Recall Sheet
+1️⃣ Born2BeRoot 		→ Sysadmin, VM, secure
+2️⃣ VM 				→ Computer-in-computer, isolated
+3️⃣ OS & why 			→ Debian, stable, beginner-friendly
+4️⃣ Root 				→ Superuser, full power, careful
+5️⃣ Sudo 				→ Temporary root, safe, logged
+6️⃣ sudoers.d 			→ Separate files, safe, organized
+7️⃣ SSH config 			→ Remote access, disable root, custom port
+8️⃣ Firewall & UFW 		→ Network protection, simple
+9️⃣ Password & PAM 	→ Strong passwords, enforce, secure (Pluggable Authentication Modules)
+🔟 Monitoring script 	→ CPU/RAM/disk/uptime, automated
+1️⃣1️⃣ Cron			→ Schedule tasks, auto-run script, automation
+1️⃣2️⃣ Signature file 	→ SHA-1 hash, verify integrity [MUST DUPLICATE MY B2BR if not signature will change upon launching]
+→ Golden sentence if stuck: “This was done for security and best practices.”
+
+⚡ Script
+
+#!/bin/bash
+→ #! tells Linux this is a script
+→ /bin/bash means use the bash shell to run it
+
+[ARCH]
+arch=$(uname -a)
+→ arch is variable name
+→ $(..) means run a command & save result
+→ uname is system info
+→ -a means all info (OS/kernel/architecture)
+
+[CPU PHYSICAL]
+cpuf=$(grep "physical id" /proc/cpuinfo | wc -l)
+→ /proc/cpuinfo is a CPU info file
+→ grep "physical id" searches for CPU ID (each physical has 1)
+→ wc -l is word count + count lines
+→ counts the number of physical CPU sockets (usually 1)
+
+[CPU VIRTUAL]
+cpuv=$(grep "processor" /proc/cpuinfo | wc -l)
+→ each processor line = 1 logical core/thread
+→ counts total vCPUs
+
+[RAM]
+ram_total=$(free --mega | awk '$1 == "Mem:" {print $2}')
+→ free --mega shows ram in MB
+→ awk is a text picker
+→ $1 == "Mem" choose memory line
+→ {print $2} means print total RAM
+→ $ means each column
+
+ram_use=$(free --mega | awk '$1 == "Mem:" {print $3}')
+→ $3 means print used RAM
+
+ram_percent=$(free --mega | awk '$1 == "Mem:" {printf("%.2f"), $3/$2*100}')
+→ $3/$2*100 means used divide by total x100
+→ printf("%.2f") shows 2 decimal
+
+[DISK]
+disk_total=$(df -m | grep "/dev/" | grep -v "/boot" | awk '{disk_t += $2} END {printf ("%.1fGb\n"), disk_t/1024}')
+→ df -m means disk usage in MB
+→ /dev/ means real disk partitions
+→ -v "/boot" means exclude boot partition
+→ $2 means total space
+→ adds all partitions together and converts MB to GB excluding boot
+
+disk_use=$(df -m | grep "/dev/" | grep -v "/boot" | awk '{disk_u += $3} END {print disk_u}')
+→ $3 means used disk space
+→ adds used space from all disk
+
+disk_percent=$(df -m | grep "/dev/" | grep -v "/boot" | awk '{disk_u += $3} {disk_t+= $2} END {printf("%d"), disk_u/disk_t*100}')
+→ adds used and total disk
+→ computers (used/total) * 100 and prints as integer
+
+[CPU LOAD]
+cpul=$(vmstat 1 2 | tail -1 | awk '{printf $15}')
+→ vmstat 1 2 means system stats, 2nd sample is accurate
+→ $15 means CPU idle percentage
+→ saved as cpul
+
+cpu_op=$(expr 100 - $cpul)
+→ subtracts idle % from 100
+→ gives CPU usage %
+
+cpu_fin=$(printf "%.1f" $cpu_op)
+→ formats CPU usage to 1 decimal place
+
+[LAST BOOT]
+lb=$(who -b | awk '$1 == "system" {print $3 " " $4}')
+→ who -b means last system boot
+→ extracts date and time
+
+[LVM USE]
+lvmu=$(if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi)
+→ lsblk means block devices
+→ checks for logical volume management if it used, outputs yes/no
+→ storage management system in Linux that lets you flexibly manage disk space
+→ instead of working directly with fixed-size disk partitions, LVM lets you resize, combine, and move storage dynamically
+
+[TCP CONNECTIONS]
+tcpc=$(ss -ta | grep ESTAB | wc -l)
+→ ss -ta means TCP (transmission control protocol) sockets
+→ ESTAB means established connections
+→ counts active TCP connections
+
+[USER LOG]
+ulog=$(users | wc -w)
+→ users means logged in users
+→ wc -w is count words
+
+[NETWORK]
+ip=$(hostname -I)
+→ prints system IP addresses
+
+mac=$(ip link | grep "link/ether" | awk '{print $2}')
+→ ip link means network interfaces
+→ link/ether means MAC address
+
+[SUDO]
+cmnd=$(journalctl _COMM=sudo | grep COMMAND | wc -l)
+→ journalctl means system logs
+→ _COMM=sudo means sudo logs only
+→ counts executed sudo commands
+
+⚡ Script Outputs
+Architecture 				→ Type of OS and CPU + kernel
+CPU (physical & virtual) 		→ How many cores the server has
+RAM usage 				→ Memory used / total
+Disk usage 				→ Storage used / total
+CPU load 				→ How busy the server is
+Last reboot 				→ When the server was restarted
+LVM 					→ Confirms disk security setup (yes/no)
+TCP connections 			→ Active network connections
+Users 					→ How many users are logged in
+IP & MAC 				→ Server network identity
+Sudo commands 			→ How many admin commands were run
+
+[GitBook Tests]
+0️⃣0️⃣ apt vs aptitude
+-apt installs and removes packages but doesn't resolve complex dependency choices (i.e sudo apt update/sudo apt install sudo/sudo apt remove vim)
+-aptitude canhandle dependency conflicts more intelligently by proposing solutions (i.e sudo aptitude install nginx)
+
+0️⃣1️⃣ What is Born2BeRoot?
+“Born2BeRoot is a system administration project where I learned how to install and configure a Linux server in a virtual machine, and how to properly secure it using users, sudo, SSH, firewall, and password policies. The goal is security and best practices.”
+
+0️⃣2️⃣ What is a virtual machine (VM)?
+“A virtual machine is a computer running inside another computer. It allows me to install and configure an operating system in an isolated environment without affecting the host machine.”
+
+0️⃣3️⃣ Which OS did you install and why?
+“I installed Debian because it is a stable and secure Linux distribution, commonly used for servers, and it is beginner-friendly for learning system administration. Debian is more community oriented and widely used, while Rocky targets enterprise (stricter security policies).”
+
+0️⃣4️⃣ What is root and why is it important?
+“Root is the superuser with full system permissions. The root user is the superuser on a Linux system with full administrative privileges. It can perform any action, including managing users, installing software, and changing system files, which is why it must be used carefully."
+
+0️⃣5️⃣ Why use sudo instead of logging in as root?
+“We use sudo to run commands with temporary root privileges without logging in as root. This keeps the system safer because mistakes or malicious commands can’t directly affect the root account, and all actions are logged for accountability.”
+
+0️⃣6️⃣ What is sudoers.d and why not edit /etc/sudoers?
+“sudoers.d is a directory where we put sudo configuration files. We don’t edit /etc/sudoers directly because a mistake there could break sudo completely. Using sudoers.d keeps the system safe and organized, and allows separate rules without risking the main configuration.”
+
+0️⃣7️⃣ Why configure SSH, and what changes did you make?
+“I configured SSH to allow secure remote access to my virtual machine from the terminal. I also improved security by disabling root login, using a non-default port, and allowing only trusted users to connect. I changed the SSH port to reduce automated attacks on the default SSH port. I disabled root login via SSH to prevent direct root access and improve security."
+
+0️⃣8️⃣ What is a firewall, and why use UFW (Uncomplicated FireWall) ?
+“A firewall protects the computer by controlling which network connections are allowed or blocked, defending against unauthorized or malicious access. I used UFW because it is simple to configure and provides an easy way to enforce these rules.”
+
+0️⃣9️⃣ What are password policies, and why use PAM?
+“Password policies are rules that enforce strong passwords, like minimum length or complexity, to make accounts more secure. I used PAM (Pluggable Authentication Modules) because it manages these rules safely and reliably on Linux systems. PAM (Pluggable Authentication Modules) is a system that manages authentication and password rules..”
+
+1️⃣0️⃣ What is the monitoring script, and why did you create it?
+“The monitoring script is a small program I created to display system information, such as CPU, RAM, disk usage, uptime, and architecture. I scheduled it with cron so it runs automatically every few minutes, helping monitor the system without manually checking.”
+
+1️⃣1️⃣ What is cron, and why use it?
+“Cron is a Linux tool used to schedule tasks to run automatically at specific times or intervals. I used it to run my monitoring script every few minutes so the system information is always updated without manual work.”
+
+1️⃣2️⃣ What is the signature file, and why did you create it?
+“The signature file is a SHA‑1 hash of my virtual machine disk. I created it to prove the VM has not been modified or tampered with, ensuring the integrity of the work I submitted.”

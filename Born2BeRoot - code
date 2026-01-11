@@ -1,0 +1,124 @@
+[BORN2BEROOT - Code]
+
+⚡ ⚡ ⚡ [EVALUATION COMMANDS] ⚡ ⚡ ⚡
+0️⃣1️⃣ Check no graphical interface
+→ ls /usr/bin/*session
+
+0️⃣2️⃣ Check Uncomplicated Firewall (UFW)
+→ sudo ufw status
+→ sudo service ufw status
+
+0️⃣3️⃣ Check SSH status
+→ sudo service ssh status
+
+0️⃣4️⃣ Check OS
+→ uname --kernel-version
+
+0️⃣5️⃣ Check user & group (within sudo & user42 groups)
+→ getent group sudo user42
+
+0️⃣6️⃣ Add user & check password policy
+→ sudo adduser (name_user)
+
+0️⃣7️⃣ Check group creation
+→ sudo addgroup (group_name)
+
+0️⃣8️⃣ Check adding to group
+→ sudo adduser (name_user) (group_name)
+
+0️⃣9️⃣ Check hostname
+→ hostname
+
+1️⃣0️⃣ Change hostname
+→ sudo nano /etc/hostname
+→ sudo nano /etc/hosts
+→ sudo reboot
+→ hostname
+the hostname is stored in /etc/hostname, which makes it persistent across reboots
+hostnamectl also updates systemd’s internal state so the kernel uses the new hostname immediately
+
+1️⃣1️⃣ Check all partitions
+→ lsblk
+
+1️⃣2️⃣ Check sudo
+→ which sudo || sudo -v																[sudo installed || -v checks user can run w/o errors]
+→ sudo adduser name_user sudo														[add new user to sudo group]
+→ getent group sudo																[check that it is within the group]
+→ nano /etc/sudoers.d/sudo_config														[show application of rules imposed by sudo for the subject]
+→ cd (followed by) → cd /var/log/sudo (followed by) → ls (followed by) → cat sudo_config			[show path /var/log/sudo exits & contains at least 1 file + history of commands used]
+
+1️⃣3️⃣ Check UFW advanced
+→ dpkg -s ufw
+→ sudo service ufw status
+→ sudo ufw status numbered															[list active rules in UFW, if bonus not done port 4241 should appear]
+→ sudo ufw allow 8080																[create a new rule for port 8080]
+→ sudo ufw status numbered															[show it's been added]
+→ sudo ufw delete num_rule															[to delete a rule]
+→ sudo ufw status numbered															[to check if it has been deleted]
+→ sudo ufw delete 5																[delete the new rule]
+→ sudo ufw status numbered															[check only required rules in the subject remain]
+
+1️⃣4️⃣ Check SSH advanced
+→ which ssh																		[to see if ssh is present]
+→ sudo service ssh status															[to see if it is running]
+→ ssh root@localhost -p 4241															[try to connect using root user to show no permission]
+→ ssh newuser@localhost -p 4241														[connect via SSH with new user using the command]
+
+1️⃣5️⃣ Check crontab of script
+→ sudo crontab -u root -e															[modify 10 to 1 to show it becomes 1 min]
+
+1. [Installing sudo]
+1a. Switch to root user			su
+1b. Install sudo package			apt install sudo
+1c. Reboot system				sudo reboot
+1d. Verify installation			su (to switch to root followed by) sudo -V
+
+2. [Create user]
+2a. Create a user (while in root)	sudo adduser sywee
+2b. Delete a folder with sudo		sudo rm -rf /home/username (followed by) ls /home (to check)		[-r is recurisve for all subfolders & files, -f means force]
+2c. Delete user with folder		sudo deluser --remove-home username
+
+3. [Create group]
+3a. Create a group				sudo addgroup sywee42
+3b. Check group				getent group sywee42
+3c. Adding user to a group		sudo adduser sywee sywee42
+(followed by)
+3d. Adding user to sudo group		sudo adduser sywee sudo
+3e. Verify group membership		getent group sudo sywee42
+3f. Change hostname			sudo nano /etc/hostname
+(followed by)
+3g. Replace login with new one	sudo nano /etc/hosts
+
+⚡ ⚡ ⚡  AFTER SUCCESSFUL CHANGE OF HOST NAME !!
+⚡ ⚡ ⚡  MUST CHANGE BACK !!! (to original sywee42)
+⚡ ⚡ ⚡  Or else eval will be affected for sudo commands later on
+
+4. [Installing & configuring SSH]
+4a. Update system				sudo apt update
+4b. Install OpenSSH server		sudo apt install openssh-server
+4c. Verify installation			sudo service ssh status
+4d. Restart SSH 				sudo service ssh restart
+4e. Check SSH 					sudo service ssh status
+4f. Connecting via SSH			ssh sywee@localhost -p 4242
+
+5. [Uncomplicated FireWall || UFW]
+5a. Install UFW package			sudo apt install ufw
+5b. Enable firewall				sudo ufw enable
+5c. Allow port to firewall 			sudo ufw allow 4242
+5d. Check firewall status 			sudo ufw status
+
+6. [Script - system info]
+6a. Architecture				uname -a
+6b. Physical CPU cores			grep "physical id" /proc/cpuinfo | wc -l						
+6c. Virtual CPU cores			grep processor /proc/cpuinfo | wc -l
+6d. RAM						free --mega | awk '$1 == "Mem:" {print $3}' 														[to get number mb of used memory]
+							free --mega | awk '$1 == "Mem:" {print $2}' 														[to get number of total mb memory]
+							free --mega | awk '$1 == "Mem:" {printf("(%.2f%%)\n", $3/$2*100)}' 										[to get % of used memory]
+6e. Disk usage					df -m | grep "/dev/" | grep -v "/boot" | awk '{use += $3} {total += $2} END {printf("(%d%%)\n"), use/total*100}'		[to get number of occuped disk memory]
+6f. CPU usage %				vmstat 1 4 | tail -1 | awk '{print $15}'															[to get cpu usage]
+6g. Last reboot time				who -b | awk '$1 == "system" {print $3 " " $4}'					 									[to get date and time of last reboot]
+6h. LVM (logical volume manager)	if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi										[to know if LVM is active or not]
+6i. Active TCP connections		ss -ta | grep ESTAB | wc -l																	[to get number of tcp connections]
+6j. Number of users logged in		users | wc -w 										 										[to get number of users]
+6k. IP & MAC address			ip link | grep "link/ether" | awk '{print $2}'	 			 										[to get MAC address]
+6l. Sudo commands count			journalctl _COMM=sudo | grep COMMAND | wc -l			 										[to get number of executed command]
