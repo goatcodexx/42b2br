@@ -125,7 +125,7 @@ cmnd=$(journalctl _COMM=sudo | grep COMMAND | wc -l)
 
 ⚡ Script Outputs
 Architecture 				    → Type of OS and CPU + kernel
-CPU (physical & virtual)         → How many cores the server has
+CPU (physical & virtual)       → How many cores the server has
 RAM usage 				        → Memory used / total
 Disk usage 				        → Storage used / total
 CPU load 				        → How busy the server is
