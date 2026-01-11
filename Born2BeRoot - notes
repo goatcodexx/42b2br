@@ -125,14 +125,14 @@ cmnd=$(journalctl _COMM=sudo | grep COMMAND | wc -l)
 
 ⚡ Script Outputs
 Architecture 				      → Type of OS and CPU + kernel
-CPU (physical & virtual) → How many cores the server has
+CPU (physical & virtual)     → How many cores the server has
 RAM usage 				        → Memory used / total
 Disk usage 				        → Storage used / total
-CPU load 				          → How busy the server is
-Last reboot 				      → When the server was restarted
-LVM 					            → Confirms disk security setup (yes/no)
+CPU load 				        → How busy the server is
+Last reboot 				    → When the server was restarted
+LVM 					          → Confirms disk security setup (yes/no)
 TCP connections 			    → Active network connections
-Users 					          → How many users are logged in
+Users 					        → How many users are logged in
 IP & MAC 				        → Server network identity
 Sudo commands 			        → How many admin commands were run
 
