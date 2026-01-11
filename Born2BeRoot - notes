@@ -4,9 +4,9 @@
 
 ⚡ Panic-Proof Recall Sheet
 1️⃣ Born2BeRoot 	              	→ Sysadmin, VM, secure
-2️⃣ VM 				               → Computer-in-computer, isolated
-3️⃣ OS & why 	        		   → Debian, stable, beginner-friendly
-4️⃣ Root 			          	      → Superuser, full power, careful
+2️⃣ VM 				             → Computer-in-computer, isolated
+3️⃣ OS & why 	        		 → Debian, stable, beginner-friendly
+4️⃣ Root 			          	 → Superuser, full power, careful
 5️⃣ Sudo 			          	      → Temporary root, safe, logged
 6️⃣ sudoers.d 		        	      → Separate files, safe, organized
 7️⃣ SSH config 			            → Remote access, disable root, custom port
