@@ -9,11 +9,11 @@
 4️⃣ Root 			          	→ Superuser, full power, careful
 5️⃣ Sudo 			          	→ Temporary root, safe, logged
 6️⃣ sudoers.d 		        	→ Separate files, safe, organized
-7️⃣ SSH config 			          → Remote access, disable root, custom port
+7️⃣ SSH config 			         → Remote access, disable root, custom port
 8️⃣ Firewall & UFW 	            → Network protection, simple
 9️⃣ Password & PAM 	            → Strong passwords, enforce, secure (Pluggable Authentication Modules)
-🔟 Monitoring script 	       → CPU/RAM/disk/uptime, automated
-1️⃣1️⃣ Cron		            	   → Schedule tasks, auto-run script, automation
+🔟 Monitoring script 	         → CPU/RAM/disk/uptime, automated
+1️⃣1️⃣ Cron		            	  → Schedule tasks, auto-run script, automation
 1️⃣2️⃣ Signature file     	    → SHA-1 hash, verify integrity [MUST DUPLICATE MY B2BR if not signature will change upon launching]
 → Golden sentence if stuck: “This was done for security and best practices.”
 
