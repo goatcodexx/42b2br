@@ -124,13 +124,13 @@ cmnd=$(journalctl _COMM=sudo | grep COMMAND | wc -l)
 → counts executed sudo commands
 
 ⚡ Script Outputs
-Architecture 				     → Type of OS and CPU + kernel
-CPU (physical & virtual)       → How many cores the server has
+Architecture 				    → Type of OS and CPU + kernel
+CPU (physical & virtual)         → How many cores the server has
 RAM usage 				        → Memory used / total
 Disk usage 				        → Storage used / total
 CPU load 				        → How busy the server is
 Last reboot 				    → When the server was restarted
-LVM 					         → Confirms disk security setup (yes/no)
+LVM 					        → Confirms disk security setup (yes/no)
 TCP connections 			    → Active network connections
 Users 					        → How many users are logged in
 IP & MAC 				        → Server network identity
